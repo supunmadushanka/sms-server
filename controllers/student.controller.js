@@ -15,7 +15,8 @@ exports.create = (req, res) => {
     const student = {
         name: req.body.name,
         address: req.body.address,
-        school: req.body.school
+        school: req.body.school,
+        familyId : req.body.familyId
     };
 
     // Save Student in the database

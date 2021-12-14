@@ -22,10 +22,10 @@ db.sequelize = sequelize;
 db.students = require("./student.model.js")(sequelize, Sequelize);
 db.families = require("./family.model.js")(sequelize, Sequelize);
 
-db.families.hasMany(db.students, { as: "students" });
+db.families.hasMany(db.students, { as: "student" });
 db.students.belongsTo(db.families, {
-  foreignKey: "id",
-  as: "family_id",
+  foreignKey: "familyId",
+  as: "family",
 });
 
 module.exports = db;
