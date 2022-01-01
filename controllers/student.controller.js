@@ -51,3 +51,41 @@ exports.update =  (req, res) => {
             });
         });
 };
+
+exports.findAll = (req, res) => {
+    Student.findAll()
+        .then(data => {
+            res.status(200).send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving tutorials."
+            });
+        });
+};
+
+exports.delete = (req, res) => {
+    const id = req.body.key;
+    console.log(req.body.key);
+  
+    Student.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Tutorial was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Tutorial with id=" + id
+        });
+      });
+  };

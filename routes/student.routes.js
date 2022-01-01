@@ -20,7 +20,14 @@ module.exports = app => {
     router.post("/add", students.create);
 
     // Update a student with id
-    router.put("/addImage/:id",upload.single('file'),students.update);
+    router.put("/addImage/:id", upload.single('file'), students.update);
+
+    // Retrieve all Tutorials
+    router.get("/getall", students.findAll);
+
+    // Delete a Tutorial with id
+    router.delete("/delete", students.delete);
 
     app.use('/students', router);
+
 };
