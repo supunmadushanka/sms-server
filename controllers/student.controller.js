@@ -1,10 +1,12 @@
 const db = require("../models");
 const Student = db.students;
+const Family = db.families;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
+    console.log(req.body)
     // Validate request
-    if (!req.body.firstName) {
+    if (!req.body.first_name) {
         res.status(400).send({
             message: "Content can not be empty!"
         });
@@ -13,12 +15,12 @@ exports.create = (req, res) => {
 
     // Create a Student
     const student = {
-        first_name: req.body.firstName,
-        last_name: req.body.secondName,
-        address: req.body.Address,
-        school: req.body.School,
-        profile_picture: null,
-        familyId: req.body.Family
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        address: req.body.address,
+        school: req.body.school,
+        profile_picture: req.body.profile_picture,
+        familyId: req.body.familyId
     };
 
     // Save Student in the database
@@ -34,22 +36,24 @@ exports.create = (req, res) => {
         });
 };
 
-exports.update =  (req, res) => {
+exports.update = (req, res) => {
     const id = req.params.id;
     const file = req.file;
-    const path = 'http://localhost:3000/uploads/' + file.filename;
+    if (file) {
+        const path = 'http://localhost:3000/uploads/' + file.filename;
 
-    Student.update({ profile_picture: path}, {
-        where: { id: id }
-    })
-        .then(num => {
-            res.status(200).send({ message: "imaged added" });
+        Student.update({ profile_picture: path }, {
+            where: { id: id }
         })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating Tutorial with id=" + id
+            .then(num => {
+                res.status(200).send({ message: "imaged added" });
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: "Error updating Tutorial with id=" + id
+                });
             });
-        });
+    }
 };
 
 exports.findAll = (req, res) => {
@@ -68,24 +72,47 @@ exports.findAll = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.body.key;
     console.log(req.body.key);
-  
+
     Student.destroy({
-      where: { id: id }
+        where: { id: id }
     })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "Tutorial was deleted successfully!"
-          });
-        } else {
-          res.send({
-            message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Could not delete Tutorial with id=" + id
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Tutorial was deleted successfully!"
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Could not delete Tutorial with id=" + id
+            });
         });
-      });
-  };
+};
+
+exports.updateStudent = (req, res) => {
+    const id = req.body.key;
+    Student.update(JSON.parse(req.body.values), {
+        where: { id: id }
+    })
+        .then(num => {
+            if (num == 1) {
+                res.send({
+                    message: "Tutorial was updated successfully."
+                });
+            } else {
+                res.send({
+                    message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`
+                });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error updating Tutorial with id=" + id
+            });
+        });
+};

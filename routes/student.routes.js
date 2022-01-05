@@ -25,8 +25,11 @@ module.exports = app => {
     // Retrieve all Tutorials
     router.get("/getall", students.findAll);
 
-    // Delete a Tutorial with id
+    // Delete a Student with id
     router.delete("/delete", students.delete);
+
+    // Update a Student with id
+    router.put("/update", students.updateStudent);
 
     app.use('/students', router);
 
